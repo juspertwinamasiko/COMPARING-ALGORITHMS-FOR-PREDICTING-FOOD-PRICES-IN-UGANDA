@@ -1,0 +1,182 @@
+\documentclass[twocolumn]{article}
+\usepackage{graphicx} 
+
+\title{Comparing Models of Predicting Food Prices in Uganda
+
+Soroti University, School of Engineering and Technology}
+\author{Belinda NAKANYIKE, Jusper TWINAMASIKO, Charles OWORI\\
+2301600100, 2301600211, 2301600086}
+\date{22 November 2025}
+\usepackage[backend=biber,style=ieee]{biblatex}
+\addbibresource{my bib.bib}
+\usepackage{xurl}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=black]{hyperref}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+The lack of a reliable food price forecast in Uganda is addressed by this project as the primary requirement for food safety and strategic planning. After thorough data preprocessing of historical data obtained from the World Food Program, the study was able to train, tune, and evaluate six different machine learning models. Four metrics($R^2$, RMSE, MAE, MSE) assessed the performance of the models. The Random Forest model was the top performer, achieving an $R^2$ of 0.9475. The research shows that although the results are impressive, the model's accuracy is limited by the absence of external features like seasonal and weather data. The project then implemented an interface to allow users to input data using Gradio.  
+\end{abstract}
+\vspace{-18pt} 
+\section{INTRODUCTION}
+
+\paragraph{}The goal of this project was to build and compare machine learning models capable of predicting food prices in Uganda based on historical data from the World Food Programme Database. For consumers, farmers, vendors, and policymakers, predicting price changes is important because it facilitates planning, food security monitoring, and informed decision-making \cite{bbale2023} \cite{okiror2024}.
+To find the model that generates the best predictions, a range of algorithms was trained and assessed using different metrics \cite{haase2023}.
+\subsection{Literature Review}
+\paragraph{}Recent research works have delved into different ways of predicting food prices and also the factors that influence the prices of food.
+
+Statistical and Econometric models.\cite{mohamud2024} applied statistical modeling to identify the factors influencing food security in Uganda, and he pointed out that socio-economic and environmental factors had a significant impact on food security. On the other hand, \cite{okiror2024} by investigating micro-price data, tried to get a better understanding of administrative and market-level price changes.
+
+Machine Learning Approaches: The use of hybrid machine learning models has become more common in the context of predicting the prices of agricultural commodities. \cite{ogol2025} merged XGBoost with gradient boosting to get accurate food price predictions in Kenya. Meanwhile, \cite{sari2024} fine-tuned several machine learning methods to achieve agricultural price forecasting.
+
+\cite{muthuswamy2025} and \cite{busari2025} conducted research that led to the conclusion that weather patterns, climate change, and seasonal variations are the main causes of agricultural price fluctuations. By incorporating these features into their prediction models, they achieved higher accuracy and reliability.
+
+Applications and real-time forecasting: \cite{bbale2023} pointed out that there is a strong necessity for price forecasting systems that are transparent and can generate insights that facilitate decision-making for the stakeholders.
+
+\section{PROBLEM STATEMENT}
+\paragraph{}The fluctuation of food prices in Uganda affects the food security of households, the income of farmers, and the stability of markets. Although attempts have been made to predict food prices, the traditional methods hardly consider the complex interactions between the climate, seasonal changes, supply and demand, and socio-economic features. This results in price spikes or drops that are difficult to predict, and therefore, producers and consumers are affected. 
+
+An accurate, data-driven system that combines different determinants such as weather data, demand indicators, and historical price trends to deliver reliable predictions is required. Furthermore, it is necessary to have the ability to make predictions in real-time for the stakeholders to make decisions at the right time.
+
+\section {METHODOLOGY}
+\paragraph{}The dataset used in this study is accessible at
+\url{https://data.humdata.org/dataset/wfp-food-prices-for-uganda}
+It includes information on various commodities such as beans, rice, maize, fish, and plantains, and the corresponding prices across different markets and time periods. The dataset has 14 fields and 14418 entries.
+\subsection{Data Preprocessing}
+The dataset was preprocessed to make it clean and ready for analysis. This involved the following steps:
+\begin{itemize}
+    \item Removing outliers using the interquartile function
+
+\item Removing non-foods from the category column
+\item  Feature engineering by extracting the month to capture seasonal trends and the year for identifying long-term trends from the date feature
+\item Encoding categorical features using both label encoder and one-hot encoding.
+\item  Selecting features to be used in the prediction
+\item  Train-test split where 80\% of the data was used to train the model, and the remaining 20\% was reserved for testing
+\item Scaling using StandardScaler 
+
+\end{itemize}
+\subsection{Data Analysis}
+\paragraph{}The monthly bean price analysis reveals a strong and consistent seasonal pattern with lower prices in the first few months of the year, most likely from post-harvest market saturation, followed by a gradual rise to a peak in the dry months as supplies become lower, and then a decrease towards the end of the year.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Screenshot 2025-11-24 135108.png}
+    \caption{Average monthly prices of beans across months of the year}
+    \label{fig:placeholder}
+\end{figure}
+\subsection{Algorithms Used}
+\paragraph{}We employed and evaluated six different machine learning techniques in order to develop predictive models for Ugandan food prices. The algorithms were carefully selected to represent a variety of modeling paradigms, such as random forests, neural networks, k-nearest neighbors, decision trees, gradient boosting machines, and linear regression models \cite{wichern2018} 
+
+All of the code utilized for model training, evaluation, and data preprocessing is accessible at 
+\url {https://github.com/juspertwinamasiko/COMPARING-ALGORITHMS-FOR-PREDICTING-FOOD-PRICES-IN-UGANDA.git}
+
+\subsubsection{Random Forest}
+\paragraph{}Before the Random Forest model was improved by hyperparameter tuning, a baseline with default parameters was established using RandomizedSearchCV. This process carefully examined the optimal conditions of significant parameters using the core Random Forest ideas of bagging and feature randomization. 
+
+Additionally, the model provides feature importance ratings that indicate how much each feature contributed to the predictions. These scores offer useful information about the underlying reasons that enhance the model's interpretability in addition to its predictive effectiveness \cite{ragunath}.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Screenshot 2025-11-22 145013.png}
+    \caption{Top 10 most important features}
+    \label{fig:placeholder}
+\end{figure}
+\subsubsection{Neural Network}
+\paragraph{}The neural network approach involves building a sequential model with several dense layers, ReLU activation, and MSE loss. Standardizing input features and implementing early stopping to prevent overfitting by tracking validation loss and reestablishing ideal weights were the key steps\cite{ding2025}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Screenshot 2025-11-22 145845.png}
+    \caption{Model loss and Model MAE by epoch}
+    \label{fig:placeholder}
+\end{figure}
+\subsubsection{Decision Tree}
+\paragraph{}Using default parameters, the Decision Tree Regressor was set up. After that, an exhaustive hyperparameter tuning session took place by RandomizedSearchCV with 50 iterations and 5-fold cross-validation to explore the main parameters such as the depth of the tree, the rules for splitting the sample, and the criteria for selecting the features. 
+
+While the overall performance was assessed using a variety of statistical techniques to verify the model's prediction accuracy, the optimizer used a negative mean squared error as the metric to assess the efficiency of the model configuration.
+
+\subsubsection{KNN}
+\paragraph{}In order to ensure fair distance calculations, the K-Nearest Neighbours methodology used a two-step process beginning with crucial feature standardization using StandardScaler, followed by systematic hyperparameter optimization using RandomizedSearchCV to determine the best combination of neighbours, weighting scheme, and distance metric. 
+
+The model's ability to correctly generalize patterns from the scaled features is ensured by adjusting key parameters.
+
+\subsubsection{Linear regression}
+\paragraph{}One-hot encoding for categorical variables and standardization of both features and target were among the several preprocessing steps used in the implementation of linear regression. The model established linear relationships on the processed data and was evaluated using standard regression metrics to provide a baseline for price prediction.
+
+\subsubsection{Gradient boosting Regressor}
+\paragraph{}Gradient boosting is an ensemble machine learning technique that develops models sequentially, with each model fixing the mistakes of its predecessors. A complete hyperparameter optimization was carried out by RandomizedSearchCV with 25 iterations and 5-fold cross-validation.
+
+The model was trained with the preprocessed data, and its performance was assessed with metrics to allow a comprehensive performance check and accuracy of prediction.
+
+\section{RESULTS}
+\subsection{Model Performance Metrics}
+\paragraph{}The project utilized a set of performance metrics to precisely assess the effectiveness of the model. It included Mean Squared Error(MSE) that was used to penalize larger prediction errors, Root Mean Squared Error(RMSE) that was used to indicate the error size, Mean Absolute Error(MAE) that was used as a measure of error which is robust and insensitive to outliers, and R-squared ($R^2$) that used to measure the proportion of variance explained by the models \cite{de2016mean}. 
+
+These metrics yielded different but complementary insights into the prediction accuracy, characteristics of error distribution, and overall explanatory power of the model, which constituted a complete understanding of the model's performance for making reliable decisions.
+\begin{table}[h]
+   \scalebox{0.9}{
+    \begin{tabular}{|l|c|c|c|c|}
+       \hline MODEL  & $R^2$&RMSE& MAE& MSE\\
+       \hline Random forest &\textbf{0.948}&\textbf{0.241}&\textbf{0.158}&\textbf{0.058}\\
+       \hline Neural network& 0.912&0.310&0.222&0.096\\
+       \hline KNN &0.838&0.424&0.299&0.179 \\
+       \hline Decision tree&0.915&0.306&0.203&0.093\\
+\hline Linear regression&0.792&0.479&0.352&0.230\\
+\hline Gradient boosting&0.941&0.256&0.169&0.066\\
+\hline
+\end{tabular}
+}
+      \caption{Comparison of results for the models}
+    \label{tab:placeholder}
+
+\end{table} 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\linewidth]{Screenshot 2025-11-24 211247.png}
+    \caption{Comparison of the models using metrics}
+    \label{fig:placeholder}
+\end{figure}
+
+   \subsection{Discussion of results}
+    \paragraph{}Among the different models tried, Random Forest was the most successful in terms of performance because of its capability to recognize non-linear relationships. 
+    
+    Nevertheless, all models exhibited limited accuracy to a greater extent due to the gaps in the dataset, particularly the lack of seasonal, weather \cite{busari2025}, and demand-related features that have a strong influence on food prices. \paragraph{}The outcomes emphasize that adding more potential features would not only increase the model's performance but also enable it to make more accurate predictions.  
+    
+    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=1\linewidth]{Screenshot 2025-11-22 181627.png}
+        \caption{Actual vs predicted scaled prices using random forest}
+        \label{fig: placeholder}
+    \end{figure}
+    \subsection{Prediction Interface}
+    \paragraph{}The prediction interface was implemented using Gradio. It enables users to input features, process them, and then utilize the best model to predict prices based on the input.
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=1.0\linewidth]{Screenshot 2025-11-22 181825.png}
+        \caption{Prediction Interface}
+        \label{fig:placeholder}
+    \end{figure}
+    \section{CHALLENGES FACED}
+    \begin{itemize}
+        \item The dataset was missing necessary external factors like rainfall, temperature, harvest periods, and seasonal production cycles, which have a major impact on food availability and prices in Uganda \cite{busari2025}.
+    
+    
+    \item The dataset did not have consumer demand features such as holiday demand, urban and rural consumption differences \cite{muth2024}. 
+    \end{itemize}
+    \section{RECOMMENDATIONS}
+    \begin{itemize}
+        \item The model can better account for the economic drivers of price changes by including weather and seasonal data in the dataset. Accurate forecasting is very important as factors like temperature, rainfall, and extreme weather can still have a very large impact on crop yields and the availability of supply \cite{shan2024} \cite{muthuswamy2025}.
+   
+    
+  
+  \item The model can more effectively explain the changes in prices of food if it uses demand-related features such as market demand, consumption patterns, and population growth, along with other features. This is done by fully integrating supply and demand into the dataset, thus leading to an increased overall accuracy.
+ 
+  \item The installation of a real-time forecasting system that can give real-time updates of the prices of food to farmers, merchants, and policymakers \cite{elayachi2023}. 
+   \end{itemize}
+  
+. \section{CONCLUSION}
+\paragraph{}Through extensive experimentation, the project finds that machine learning, more specifically the Random Forest algorithm, is capable of predicting Ugandan food prices with high accuracy, thus paving the way for data-driven decision making \cite{dionissopoulos2024}. The model's success is attributed to its ability to capture complex nonlinear patterns in the data. However, the model's capability to predict is hindered by shortcomings of the dataset, especially the lack of the most important real-world factors such as climate, season, and demand. The final model was turned into an interactive Gradio interface. For future improvements, we strongly recommend integrating additional external datasets and exploring more sophisticated models to further enhance accuracy and robustness for food security applications\cite{ogol2025}.
+\printbibliography
+
+
+
+\end{document}
